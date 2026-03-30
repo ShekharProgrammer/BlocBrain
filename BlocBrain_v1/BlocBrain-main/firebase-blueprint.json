@@ -1,0 +1,113 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile and settings",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "settings": {
+          "type": "object",
+          "properties": {
+            "theme": { "type": "string", "enum": ["minecraft", "dark", "minimal"] },
+            "fontSize": { "type": "number" },
+            "fontFamily": { "type": "string" },
+            "wallpaper": { "type": "string" }
+          }
+        }
+      },
+      "required": ["id", "email"]
+    },
+    "Brain": {
+      "title": "Brain",
+      "description": "A collection of nodes and connections representing a 'brain'",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "name": { "type": "string" },
+        "nodes": {
+          "type": "array",
+          "items": { "$ref": "Node" }
+        },
+        "connections": {
+          "type": "array",
+          "items": { "$ref": "Connection" }
+        },
+        "isDeleted": { "type": "boolean" },
+        "deletedAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "name"]
+    },
+    "Node": {
+      "title": "Node",
+      "description": "A single note or item in a brain",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string", "enum": ["text", "image", "link", "board", "todo", "tracker"] },
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "priority": { "type": "string", "enum": ["low", "medium", "high"] },
+        "color": { "type": "string" },
+        "deadline": { "type": "string" },
+        "tracker": { "type": "number" },
+        "parentId": { "type": "string" },
+        "targetUrl": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "width": { "type": "number" },
+        "height": { "type": "number" },
+        "shape": { "type": "string", "enum": ["circle", "square", "rounded"] },
+        "todoList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "text": { "type": "string" },
+              "completed": { "type": "boolean" }
+            }
+          }
+        },
+        "habits": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "name": { "type": "string" },
+              "entries": { "type": "object" }
+            }
+          }
+        }
+      }
+    },
+    "Connection": {
+      "title": "Connection",
+      "description": "A link between two nodes",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "fromId": { "type": "string" },
+        "toId": { "type": "string" },
+        "color": { "type": "string" }
+      }
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profile and settings"
+    },
+    "/brains/{brainId}": {
+      "schema": "Brain",
+      "description": "Brains owned by users"
+    }
+  }
+}

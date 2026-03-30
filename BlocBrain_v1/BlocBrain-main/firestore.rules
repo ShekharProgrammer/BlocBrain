@@ -1,0 +1,84 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: users
+    // Document ID: userId (from Auth)
+    // Fields:
+    //   - id: string (required)
+    //   - email: string (required, format: email)
+    //   - displayName: string
+    //   - photoURL: string
+    //   - settings: map
+    //
+    // Collection: brains
+    // Document ID: brainId (uuid)
+    // Fields:
+    //   - id: string (required)
+    //   - userId: string (required) - owner of the brain
+    //   - name: string (required)
+    //   - nodes: list (array of Node objects)
+    //   - connections: list (array of Connection objects)
+    //   - isDeleted: bool
+    //   - deletedAt: string (date-time)
+    //   - updatedAt: string (date-time)
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isDocOwner() {
+      return isAuthenticated() && request.auth.uid == resource.data.userId;
+    }
+
+    function isValidEmail(email) {
+      return email is string && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
+    function isValidUser(data) {
+      return data.keys().hasAll(['id', 'email']) &&
+             data.id == request.auth.uid &&
+             isValidEmail(data.email) &&
+             (!('displayName' in data) || data.displayName is string) &&
+             (!('photoURL' in data) || data.photoURL is string);
+    }
+
+    function isValidBrain(data) {
+      return data.keys().hasAll(['id', 'userId', 'name']) &&
+             data.userId == request.auth.uid &&
+             data.name is string && data.name.size() > 0 && data.name.size() < 100 &&
+             (!('nodes' in data) || data.nodes is list) &&
+             (!('connections' in data) || data.connections is list);
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /users/{userId} {
+      allow read: if isOwner(userId);
+      allow create: if isOwner(userId) && isValidUser(request.resource.data);
+      allow update: if isOwner(userId) && isValidUser(request.resource.data);
+      allow delete: if isOwner(userId);
+    }
+
+    match /brains/{brainId} {
+      allow read: if isAuthenticated() && (resource == null || resource.data.userId == request.auth.uid);
+      allow create: if isAuthenticated() && isValidBrain(request.resource.data);
+      allow update: if isAuthenticated() && isDocOwner() && isValidBrain(request.resource.data);
+      allow delete: if isAuthenticated() && isDocOwner();
+    }
+  }
+}

@@ -58,6 +58,7 @@ import {
   subMonths,
   subDays
 } from 'date-fns';
+import { Analytics } from "@vercel/analytics/next";
 
 // --- Components ---
 

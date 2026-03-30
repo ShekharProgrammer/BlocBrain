@@ -113,7 +113,7 @@ const Sidebar = ({ isOpen, onClose, onOpenSettings, onOpenGuide, onOpenTrash }: 
             className="fixed top-0 left-0 h-full w-full sm:w-72 bg-mc-black z-50 mc-border border-l-0 border-t-0 border-b-0 flex flex-col"
           >
             <div className="p-4 border-b-4 border-black flex justify-between items-center bg-mc-gray">
-              <h2 className="font-minecraft text-2xl text-mc-orange">BLOCK BRAIN</h2>
+              <h2 className="font-minecraft text-2xl text-mc-orange">BLOC BRAIN</h2>
               <button onClick={onClose} className="p-1 hover:bg-mc-light-gray rounded">
                 <X size={24} />
               </button>

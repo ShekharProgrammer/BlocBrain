@@ -335,6 +335,7 @@ const NodeComponent = ({
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
+    e.stopPropagation();
     const touch = e.touches[0];
     onSelect(e);
     onDragStart();
@@ -836,7 +837,8 @@ export default function App() {
   };
 
   const handleBoardTouchStart = (e: React.TouchEvent) => {
-  if (e.touches.length === 1 && e.target === boardRef.current) {
+    const target = e.target as HTMLElement;
+    if (e.touches.length === 1 && target === boardRef.current) {
     const touch = e.touches[0];
     setIsPanning(true);
     setHasMovedDuringPan(false);

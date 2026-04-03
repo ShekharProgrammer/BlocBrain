@@ -313,17 +313,18 @@ const NodeComponent = ({
 
   const handleTouchEnd = (e: React.TouchEvent) => {
     if (!dragRef.current.isDragging) return;
+    e.preventDefault();
     const touch = e.changedTouches[0];
     const dx = Math.abs(touch.clientX - dragRef.current.startX);
     const dy = Math.abs(touch.clientY - dragRef.current.startY);
-    
-    if (dx < 5 && dy < 5 && !isConnecting) {
-      onOpenModal(node);
-    }
-    
+  
     dragRef.current.isDragging = false;
     window.removeEventListener('touchmove', handleTouchMove);
     window.removeEventListener('touchend', handleTouchEnd as any);
+
+    if (dx < 8 && dy < 8 && !isConnecting) {
+      setTimeout(() => onOpenModal(node), 50);
+    }
   };
 
   const handleTouchMove = (moveEvent: TouchEvent) => {

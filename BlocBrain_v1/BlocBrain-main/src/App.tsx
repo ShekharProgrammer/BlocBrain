@@ -313,7 +313,6 @@ const NodeComponent = ({
 
   const handleTouchEnd = (e: React.TouchEvent) => {
     if (!dragRef.current.isDragging) return;
-    e.preventDefault();
     const touch = e.changedTouches[0];
     const dx = Math.abs(touch.clientX - dragRef.current.startX);
     const dy = Math.abs(touch.clientY - dragRef.current.startY);

@@ -1277,7 +1277,7 @@ export default function App() {
                   </button>
                 </label>
                 <textarea
-                  autoFocus
+                  autoFocus={False}
                   className="w-full bg-black border-2 border-mc-gray p-3 font-minecraft text-white outline-none focus:border-mc-orange min-h-[150px] resize-none"
                   value={editingNode.content}
                   onFocus={saveHistory}

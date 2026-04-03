@@ -310,21 +310,20 @@ const NodeComponent = ({
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseup', handleMouseUp as any);
   };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
+  
+  const handleTouchEnd = (e: TouchEvent) => {
     if (!dragRef.current.isDragging) return;
     const touch = e.changedTouches[0];
     const dx = Math.abs(touch.clientX - dragRef.current.startX);
     const dy = Math.abs(touch.clientY - dragRef.current.startY);
-  
-    if (dx < 5 && dy < 5 && !isConnecting) {
-      onOpenModal(node);
-    }
-  
     dragRef.current.isDragging = false;
     window.removeEventListener('touchmove', handleTouchMove);
-    window.removeEventListener('touchend', handleTouchEnd as any);
+    window.removeEventListener('touchend', handleTouchEnd);
+    if (dx < 8 && dy < 8 && !isConnecting) {
+      onOpenModal(node);
+    }
   };
+
 
   const handleTouchMove = (moveEvent: TouchEvent) => {
     if (!dragRef.current.isDragging) return;
@@ -346,9 +345,8 @@ const NodeComponent = ({
       initialX: node.x,
       initialY: node.y
     };
-
     window.addEventListener('touchmove', handleTouchMove);
-    window.addEventListener('touchend', handleTouchEnd as any);
+    window.addEventListener('touchend', handleTouchEnd);
   };
 
   return (

@@ -1071,6 +1071,9 @@ const handleBoardTouchEnd = () => {
         onMouseMove={handleBoardMouseMove}
         onMouseUp={handleBoardMouseUp}
         onMouseLeave={handleBoardMouseUp}
+        onTouchStart={handleBoardTouchStart}
+        onTouchMove={handleBoardTouchMove}
+        onTouchEnd={handleBoardTouchEnd}
         className={cn(
           "flex-1 relative overflow-hidden bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')] bg-mc-black",
           isPanning ? "cursor-grabbing" : "cursor-default"

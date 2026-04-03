@@ -322,7 +322,8 @@ const NodeComponent = ({
     window.removeEventListener('touchend', handleTouchEnd as any);
 
     if (dx < 8 && dy < 8 && !isConnecting) {
-      onOpenModal(node);
+      const n=node;
+      setTimeout(() => onOpenModal(n),10);
     }
   };
 

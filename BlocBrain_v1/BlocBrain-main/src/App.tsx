@@ -835,6 +835,31 @@ export default function App() {
     setIsPanning(false);
   };
 
+  const handleBoardTouchStart = (e: React.TouchEvent) => {
+  if (e.touches.length === 1 && e.target === boardRef.current) {
+    const touch = e.touches[0];
+    setIsPanning(true);
+    setHasMovedDuringPan(false);
+    (boardRef.current as any)._touchStart = { x: touch.clientX, y: touch.clientY };
+  }
+};
+
+const handleBoardTouchMove = (e: React.TouchEvent) => {
+  if (!isPanning || e.touches.length !== 1) return;
+  const touch = e.touches[0];
+  const prev = (boardRef.current as any)._touchStart;
+  if (!prev) return;
+  const dx = touch.clientX - prev.x;
+  const dy = touch.clientY - prev.y;
+  if (Math.abs(dx) > 2 || Math.abs(dy) > 2) setHasMovedDuringPan(true);
+  setOffset(p => ({ x: p.x + dx, y: p.y + dy }));
+  (boardRef.current as any)._touchStart = { x: touch.clientX, y: touch.clientY };
+};
+
+const handleBoardTouchEnd = () => {
+  setIsPanning(false);
+};
+
   // Notification system
   useEffect(() => {
     if ("Notification" in window && Notification.permission === "default") {

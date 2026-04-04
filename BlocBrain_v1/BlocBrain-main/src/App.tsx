@@ -365,9 +365,9 @@ const NodeComponent = ({
         zIndex: isSelected ? 10 : 1,
         borderColor: node.color || '#ff9800'
       }}
+      data-node="true"
       className={cn(
         "absolute p-4 mc-border cursor-move transition-shadow bg-mc-gray flex flex-col overflow-hidden",
-        data-node = "true",
         isSelected ? "ring-4 ring-white shadow-2xl" : "shadow-lg",
         node.shape === 'circle' ? "rounded-full" : 
         node.shape === 'rounded' ? "rounded-3xl" : 

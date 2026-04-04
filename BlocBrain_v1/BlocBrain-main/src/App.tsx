@@ -1276,7 +1276,7 @@ export default function App() {
                   </button>
                 </label>
                 <textarea
-                  autoFocus={False}
+                  autoFocus={false}
                   className="w-full bg-black border-2 border-mc-gray p-3 font-minecraft text-white outline-none focus:border-mc-orange min-h-[150px] resize-none"
                   value={editingNode.content}
                   onFocus={saveHistory}
@@ -1715,6 +1715,7 @@ const Modal = ({ title, children, onClose }: { title: string, children: React.Re
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       className="absolute inset-0 bg-black/80" 
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
       onClick={onClose} 
     />
     <motion.div 

@@ -366,7 +366,7 @@ const NodeComponent = ({
         borderColor: node.color || '#ff9800'
       }}
       className={cn(
-        "absolute p-4 mc-border cursor-move transition-shadow bg-mc-gray flex flex-col overflow-hidden",
+        "absolute p-4 mc-border cursor-move transition-shadow bg-mc-gray flex flex-col overflow-hidden data-node="true"",
         isSelected ? "ring-4 ring-white shadow-2xl" : "shadow-lg",
         node.shape === 'circle' ? "rounded-full" : 
         node.shape === 'rounded' ? "rounded-3xl" : 
@@ -1046,6 +1046,26 @@ export default function App() {
         onMouseMove={handleBoardMouseMove}
         onMouseUp={handleBoardMouseUp}
         onMouseLeave={handleBoardMouseUp}
+        onTouchStart={(e) => {
+          if (e.touches.length === 1 && (e.target as HTMLElement).closest('[data-node]') === null) {
+            const touch = e.touches[0];
+            setIsPanning(true);
+            setHasMovedDuringPan(false);
+            (boardRef.current as any)._t = { x: touch.clientX, y: touch.clientY };
+          }
+        }}
+        onTouchMove={(e) => {
+          if (!isPanning || e.touches.length !== 1) return;
+          const touch = e.touches[0];
+          const prev = (boardRef.current as any)._t;
+          if (!prev) return;
+          const dx = touch.clientX - prev.x;
+          const dy = touch.clientY - prev.y;
+          if (Math.abs(dx) > 2 || Math.abs(dy) > 2) setHasMovedDuringPan(true);
+          setOffset(p => ({ x: p.x + dx, y: p.y + dy }));
+          (boardRef.current as any)._t = { x: touch.clientX, y: touch.clientY };
+        }}
+        onTouchEnd={() => setIsPanning(false)}
         className={cn(
           "flex-1 relative overflow-hidden bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')] bg-mc-black",
           isPanning ? "cursor-grabbing" : "cursor-default"

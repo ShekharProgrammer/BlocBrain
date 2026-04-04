@@ -1716,7 +1716,7 @@ const Modal = ({ title, children, onClose }: { title: string, children: React.Re
       exit={{ opacity: 0 }}
       className="absolute inset-0 bg-black/80" 
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
-      onClick={onClose} 
+      onTouchStart={(e) => e.stopPropagation()}
     />
     <motion.div 
       initial={{ scale: 0.9, opacity: 0, y: 20 }}

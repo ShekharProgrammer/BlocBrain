@@ -355,6 +355,7 @@ const NodeComponent = ({
       onMouseDown={handleMouseDown}
       onTouchStart={handleTouchStart}
       onClick={(e) => e.stopPropagation()}
+      onTouchEnd={(e) => e.stopPropagation()}
       style={{ 
         left: node.x, 
         top: node.y, 
